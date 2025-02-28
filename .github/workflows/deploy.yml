@@ -23,12 +23,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Install AWS SAM CLI
-        run: |
-          curl -Lo sam-installation.sh https://github.com/aws/aws-sam-cli/releases/latest/download/install
-          bash sam-installation.sh --update
-          sam --version
-
       - name: Build and Deploy API
         run: |
           sam build
