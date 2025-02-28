@@ -1,0 +1,32 @@
+name: Deploy API to AWS CloudFormation
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS CLI
+        uses: aws-actions/configure-aws-cli@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Install AWS SAM CLI
+        run: |
+          curl -Lo sam-installation.sh https://github.com/aws/aws-sam-cli/releases/latest/download/install
+          bash sam-installation.sh --update
+          sam --version
+
+      - name: Build and Deploy API
+        run: |
+          sam build
+          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
